@@ -1,4 +1,6 @@
 import sys
+import matplotlib.pyplot as plt
+import time
 
 def encoder(cifrado, clave, index=0):
     # Base case: if the cipher text is empty, return an empty string
@@ -24,10 +26,6 @@ def encoder(cifrado, clave, index=0):
     else:
         return caracter + encoder(cifrado[1:], clave, index)
 
-
-
-
-
 if __name__ == '__main__':
     # Obtener argumentos de línea de comandos
     if len(sys.argv) != 4:
@@ -35,12 +33,34 @@ if __name__ == '__main__':
         sys.exit(1)
 
     clave = sys.argv[1]
-    print("Clave: " + clave)
     archivo_entrada = sys.argv[2]
     archivo_salida = sys.argv[3]
-    #enviar el texto cifrado al archivo de salida
+
+    # Medir el tiempo de ejecución del cifrado César
+    tiempos = []
+    longitudes = []
     with open(archivo_entrada, 'r') as f:
         texto = f.read()
+
+        for longitud in range(100, len(texto), 100):
+            cifrado = texto[:longitud]
+            start_time = time.time()
+            encoder(cifrado, clave)
+            elapsed_time = time.time() - start_time
+            tiempos.append(elapsed_time)
+            longitudes.append(longitud)
+
+    # Graficar los resultados
+    plt.plot(longitudes, tiempos)
+    plt.title('Tiempo de ejecución del cifrado César')
+    plt.xlabel('Longitud del texto de entrada')
+    plt.ylabel('Tiempo de ejecución (segundos)')
+    plt.show()
+
+    # Escribir el texto cifrado en el archivo de salida
+    with open(archivo_salida, 'w') as f:
         cifrado = encoder(texto, clave)
-        with open(archivo_salida, 'w') as f:
-            f.write(cifrado)
+        f.write(cifrado)
+
+    print("Clave: " + clave)
+    print(f"El texto se ha cifrado con éxito con la clave '{clave}' y se ha guardado en el archivo '{archivo_salida}'.")

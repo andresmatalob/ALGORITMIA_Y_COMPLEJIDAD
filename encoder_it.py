@@ -1,10 +1,10 @@
 import sys
 
+
 def encoder(cifrado, clave):
-    #encripta un texto con el algoritmo de cesar
-    #se le pasa por parametro la clave y el texto a cifrar
-    #devuelve el texto cifrado
-    # TIENE QUE SER ITERATIVO (NO RECURSIVO)
+    if not clave.isalpha():
+        print("Error: La clave debe contener solo letras del alfabeto.")
+        return None
     texto = ""
     index = 0
     for caracter in cifrado:
@@ -29,7 +29,6 @@ def encoder(cifrado, clave):
     return texto
 
 
-
 if __name__ == '__main__':
     # Obtener argumentos de línea de comandos
     if len(sys.argv) != 4:
@@ -37,15 +36,19 @@ if __name__ == '__main__':
         sys.exit(1)
 
     clave = sys.argv[1]
-    print("Clave: " + clave)
     archivo_entrada = sys.argv[2]
     archivo_salida = sys.argv[3]
-    #enviar el texto cifrado al archivo de salida
+
+    # Leer el archivo de entrada
     with open(archivo_entrada, 'r') as f:
         texto = f.read()
+
+    # Cifrar el texto
         cifrado = encoder(texto, clave)
-        with open(archivo_salida, 'w') as f:
-            f.write(cifrado)
 
+    # Escribir el texto cifrado en el archivo de salida
+    with open(archivo_salida, 'w') as f:
+        f.write(cifrado)
 
-
+    print("Clave: " + clave)
+    print(f"El texto se ha cifrado con éxito con la clave '{clave}' y se ha guardado en el archivo '{archivo_salida}'.")
